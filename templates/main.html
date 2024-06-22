@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+{% load django_bootstrap5 %}
+{% load static %}
+<head>
+<link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Подключение CSS Bootstrap 5 -->
+    {% bootstrap_css %}
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+
+    <title>{{ name }}</title>
+</head>
+
+<body class="bg-light">
+{% block content %}
+
+<div class="bg-white">
+<div class="d-flex justify-content-between align-items-center">
+    <h1 class="bg-white">Сводный отчет Backoffice Siberian Wellness</h1>
+    {% if table_data %}
+<iframe class="mt-3" src="https://yoomoney.ru/quickpay/fundraise/button?billNumber=93OSegQz5Cw.230708&" width="330" height="50" frameborder="0" allowtransparency="true" scrolling="no"></iframe></div>
+    {% endif %}
+    <div class=" bg-white d-flex justify-content-between align-items-center ">
+    <h2 style="margin-right: auto;">{{ name }} {{ last_modified |safe }}</h2>
+    <form method="post" action="/load/" class=" m-1 mb-2 mt-2">
+        {% csrf_token %}
+        <!-- Здесь может быть другое содержимое формы -->
+        <input type="submit" value="Обновить данные" class="btn btn-primary">
+
+    </form>
+    <!-- Кнопка для открытия модального окна -->
+    <button type="button" class="btn btn-outline-primary m-1 mb-2 mt-2" data-bs-toggle="modal" data-bs-target="#contactModal">
+        Настройки
+    </button>
+
+<form id="logout-form" method="post" action="/logout/">
+  {% csrf_token %}
+  <button type="submit"  class="btn btn-outline-danger m-1 mb-2 mt-2" >Выйти</button>
+</form>
+
+    <!-- Модальное окно -->
+    <div class="modal fade " id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content ">
+                <div class="modal-header bg-primary text-white text-center" style="--bs-bg-opacity: .75;">
+                    <h5 class="modal-title" id="contactModalLabel">Настройки</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/save/">
+                        {% csrf_token %}
+                        <!-- Дополнительные поля пользователя -->
+                        <div class="mb-3">
+                            <label for="id_first_name" class="form-label">Имя для сообщений клиентам (не обязательное поле)</label>
+                            <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_sw_numer" class="form-label">Регистрационный номер</label>
+                            <input type="text" name="sw_numer" class="form-control" id="id_sw_numer" value="{{ user.sw_numer }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_sw_password" class="form-label">Пароль от Backoffice</label>
+                            <input type="text" name="sw_password" class="form-control" id="id_sw_password" value="{{ user.sw_password }}">
+                        </div>
+
+                        <!-- Кнопка для заполнения полей -->
+                        <input type="submit" name="fill_fields" value="Заполнить поля" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div id="loading" style="display:none;">Загрузка...</div>
+<div>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<!-- Использование класса "table" для стилизации таблицы -->
+{% if table_data %}
+    {% autoescape off %}
+        {{ table_data }}
+    {% endautoescape %}
+{% else %}
+
+<!-- Настройки -->
+<div class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 mt-5">
+                <div class="shadow-lg card bg-body rounded">
+                    <h5 class="card-header bg-primary text-white text-center" style="--bs-bg-opacity: .75;">Настройки</h5>
+                    <form class="m-2" method="post" action="/save/">
+                        {% csrf_token %}
+                        <!-- Дополнительные поля пользователя -->
+                        <div class="mb-3">
+                            <label for="id_first_name" class="form-label">Имя для сообщений клиентам (не обязательное поле)</label>
+                            <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ user.first_name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_sw_numer" class="form-label">Регистрационный номер</label>
+                            <input type="text" name="sw_numer" class="form-control" id="id_sw_numer" value="{{ user.sw_numer }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_sw_password" class="form-label">Пароль от Backoffice</label>
+                            <input type="text" name="sw_password" class="form-control" id="id_sw_password" value="{{ user.sw_password }}">
+                        </div>
+                        <!-- Кнопка для заполнения полей -->
+                        <input type="submit" name="fill_fields" value="Обновить данные" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Конец второго модального окна -->
+{% endif %}
+
+<!-- Подключение JS Bootstrap 5 -->
+{% bootstrap_javascript %}
+{% endblock %}
+</body>
+
+</html>

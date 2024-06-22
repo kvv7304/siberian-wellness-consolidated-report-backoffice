@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load django_bootstrap5 %}
+{% load static %}
+
+<html lang="en">
+<head>
+<link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <meta charset="UTF-8">
+    <title>{% if view.request.resolver_match.url_name == 'registration' %}Регистрация нового пользователя{% else %}Авторизация{% endif %}</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body class="bg-light">
+{% block content %}
+<h1 class=" bg-white" >Сводный отчет Backoffice Siberian Wellness</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 mt-5">
+                <div class="shadow-lg card bg-body rounded ">
+                    <div class="card-header bg-primary text-white text-center" style="--bs-bg-opacity: .75;">
+                        {% if view.request.resolver_match.url_name == 'registration' %}
+                            Регистрация нового пользователя
+                        {% else %}
+                            Авторизация
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-primary">
+                                    {% if view.request.resolver_match.url_name == 'registration' %}
+                                        Зарегистрироваться
+                                    {% else %}
+                                        Войти
+                                    {% endif %}
+                                </button>
+                                {% if view.request.user.is_authenticated %}
+                                    <script>
+                                        window.location.replace("{% url 'table_main' %}");
+                                    </script>
+                                {% else %}
+                                    {% if view.request.resolver_match.url_name != 'registration' %}
+                                        <a href="{% url 'registration' %}" class="btn btn-outline-primary ms-2">Перейти к регистрации</a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>
